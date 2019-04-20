@@ -1,3 +1,16 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['loginname']) ) {
+    if ($_SERVER['PHP_SELF'] != '/login.php') {
+        header('Location: login.php');
+        exit();
+    }
+}
+if ($_SERVER['PHP_SELF'] == '/login.php') {
+    session_unset();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,16 +50,56 @@
           <li><a href="#">Nuts</a></li>
           <li><a href="#">Gluten full</a></li>
           <li>
-            <a href="/cart.php" class="btn btn-warning navbar-btn">
+             <?php
+                $stateCartIcon = 'btn-warning';
+                if(!empty($_SESSION['cart'])) {
+                    $stateCartIcon = 'btn-success';
+                }
+                ?>
+            <a href="/cart.php" class="btn <?= $stateCartIcon ?> navbar-btn">
               <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
               Cart
             </a>
           </li>
+            <?php if (isset($_SESSION['loginname'])) : ?>
+            <li>
+                <a type="button" class="btn navbar-btn btn-danger" data-toggle="modal" data-target="#modlogout">
+                    Déconnexion
+                </a>
+            </li>
+            <?php endif ?>
         </ul>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
   <div class="container-fluid text-right">
-    <strong>Hello Wilder !</strong>
+    <strong><?php if (isset($_SESSION['loginname'])) : ?>
+            Hello <?= $_SESSION['loginname']?> !
+        <?php else : ?>
+            Bienvenue!!
+        <?php endif ?>
+    </strong>
   </div>
 </header>
+
+  <!-- Modal -->
+  <div class="modal fade" id="modlogout" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title">Deconnexion</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <p>Vous êtes sur le point de vous déconnecter. Votre panier sera supprimé.</p>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                  <a class="btn btn-danger" href="/login.php" role="button">Se déconnecter</a>
+              </div>
+          </div>
+      </div>
+  </div>
+

@@ -1,4 +1,19 @@
-<?php require 'inc/head.php'; ?>
+<?php
+require 'inc/head.php';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $loginname = $_POST['loginname'];
+    $loginname =  strip_tags(htmlspecialchars(stripslashes(trim($loginname))));
+    $errors=[];
+    if (empty($loginname)) {
+        $errors['loginname'] = "Login obligatoire";
+    }
+    if(empty($errors)) {
+        $_SESSION['loginname'] = $loginname;
+        $_SESSION['cart'] =[];
+        header('Location: index.php');
+    }
+}
+?>
 <div class="container" style="margin-top:40px">
 <div class="row">
   <div class="col-sm-6 col-md-4 col-md-offset-4">
@@ -17,6 +32,11 @@
             </div>
             <div class="row">
               <div class="col-sm-12 col-md-10  col-md-offset-1 ">
+                  <?php if (!empty($errors)) : ?>
+                  <div class="alert alert-danger text-center" role="alert">
+                      <?= $errors['loginname'] ?>
+                  </div>
+                  <?php endif?>
                 <div class="form-group">
                   <div class="input-group">
                     <span class="input-group-addon">

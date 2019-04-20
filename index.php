@@ -1,4 +1,24 @@
 <?php require 'inc/head.php'; ?>
+<?php
+$alertadd =false;
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    if (!empty($_GET['add_to_cart'])) {
+        $_SESSION['cart'][] =$_GET['add_to_cart'];
+        $alertadd=true;
+    }
+}
+
+?>
+<section class="container-fluid">
+    <div class="alert alert-dark text-center" role="alert">
+        <h3>Une petite faim <?= $_SESSION['loginname']?> ?</h3>
+    </div>
+    <?php if ($alertadd) : ?>
+        <div class="alert alert-dark text-center" role="alert">
+            <h4>Le produit  <?= $_GET['add_to_cart'] ?> a été correctement ajouté au panier</h4>
+        </div>
+    <?php endif ?>
+</section>
 <section class="cookies container-fluid">
   <div class="row">
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
